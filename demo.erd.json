@@ -520,20 +520,20 @@
       "1zfBQeDZm6x061cwC_Oxw": {
         "id": "1zfBQeDZm6x061cwC_Oxw",
         "tableId": "C-d3GLllyrfXYFcd7ncHe",
-        "name": "total_jatah",
+        "name": "jumlah_jatah",
         "comment": "",
         "dataType": "INT",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 60,
+          "widthName": 69,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1753062477210,
+          "updateAt": 1753165211688,
           "createAt": 1753062468184
         }
       },
