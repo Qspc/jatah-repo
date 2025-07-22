@@ -17,7 +17,7 @@ export default function CardLandingPage() {
     const { data, isSuccess } = useQuery({
         queryKey: ["kelompok"],
         queryFn: async () => {
-            const data = getAllAsrama();
+            const data = getAllKelompok();
             return data;
         },
     });

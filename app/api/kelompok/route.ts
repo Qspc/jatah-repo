@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
     try {
-        const { data, error } = await supabase.from("asrama").select("*");
+        const { data, error } = await supabase.from("kelompok").select("*");
         if (error) {
             return new NextResponse(
                 JSON.stringify({
@@ -36,7 +36,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { error } = await supabase.from("asrama").insert(body);
+        const { error } = await supabase.from("kelompok").insert(body);
 
         if (error) {
             return new NextResponse(
@@ -76,7 +76,7 @@ export async function PATCH(req: Request) {
     try {
         const body = await req.json();
         const { error } = await supabase
-            .from("asrama")
+            .from("kelompok")
             .update(body)
             .eq("id", body.id);
 
@@ -119,7 +119,7 @@ export async function DELETE(req: Request) {
         const body = await req.json();
 
         const response = await supabase
-            .from("asrama")
+            .from("kelompok")
             .delete()
             .eq("id", body.id);
 
