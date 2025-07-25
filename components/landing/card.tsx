@@ -12,6 +12,7 @@ import { getAllAsrama } from "@/controller/asrama.service";
 import { getAllKelompok } from "@/controller/kelompok.service";
 import { getAllSantri } from "@/controller/santri.service";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 export default function CardLandingPage() {
     const { data, isSuccess } = useQuery({
@@ -21,15 +22,17 @@ export default function CardLandingPage() {
             return data;
         },
     });
+    const router = useRouter();
 
     return (
-        <div className="flex gap-8 flex-wrap justify-center items-center">
+        <div className="flex flex-wrap items-center justify-center gap-8">
             {isSuccess && data && data.length > 0 && (
                 <>
                     {data.map((res: any, index: any) => (
                         <Card
                             key={index}
-                            className="flex flex-row items-center justify-between max-h-28 min-w-96"
+                            onClick={() => router.push(`/${res.id}/dashboard`)}
+                            className="flex flex-row items-center justify-between cursor-pointer max-h-28 min-w-96"
                         >
                             <CardHeader className="flex flex-col gap-1.5 w-[80%]">
                                 <CardTitle className="text-[18px] overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
@@ -54,7 +57,7 @@ export default function CardLandingPage() {
                         className="flex cursor-pointer flex-col items-center justify-center w-full text-[#3C3C43] hover:bg-gray-100 rounded-[12px] transition-colors"
                         aria-label="Add new content"
                     >
-                        <span className="text-3xl mb-2">＋</span>
+                        <span className="mb-2 text-3xl">＋</span>
                         <span className="text-[16px] font-medium">
                             Tambah Baru
                         </span>
