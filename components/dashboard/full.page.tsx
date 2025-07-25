@@ -1,3 +1,3 @@
 export default function DashboardPage() {
-    return <div>Dashboard</div>;
+    return <div className="w-full h-screen">Dashboard</div>;
 }
