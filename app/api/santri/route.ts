@@ -36,7 +36,11 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { error } = await supabase.from("santri").insert(body);
+        console.log(body);
+        const { error } = await supabase
+            .from("santri")
+            .insert(Array.isArray(body) ? body : [body]);
+        console.log(JSON.stringify(error));
 
         if (error) {
             return new NextResponse(
