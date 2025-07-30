@@ -1,13 +1,16 @@
+import CoverPage from "../login/cover";
 import CardLandingPage from "./card";
 import TitleLandingPage from "./title.page";
 
 export default function LandingPage() {
     return (
-        <div className="h-screen w-full bg-primary-200 ">
-            <div className="md:pt-40 pt-10 px-20 flex flex-col gap-20 items-center">
-                <TitleLandingPage />
-                <CardLandingPage />
+        <CoverPage>
+            <div className="z-50 w-full h-screen">
+                <div className="flex flex-col items-center gap-20 px-20 pt-10 md:pt-40">
+                    <TitleLandingPage />
+                    <CardLandingPage />
+                </div>
             </div>
-        </div>
+        </CoverPage>
     );
 }

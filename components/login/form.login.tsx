@@ -18,20 +18,24 @@ export default function LoginPage() {
     } = useForm<LoginFormProps>();
     const [showPassword, setShowPassword] = useState(false);
     const route = useRouter();
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (data: LoginFormProps) => {
         try {
+            setLoading(true);
             // alert(JSON.stringify(data));
             signIn("credentials", { ...data }).then(async (res) => {
+                console.log({ res });
                 if (res?.ok) {
                     const session = await getSession();
-                    console.log({ res });
+                    route.push("/landing");
                 }
             });
             // toast.success("Selamat datang");
-            route.push("/landing");
         } catch (error) {
             toast.error("Proses gagal");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -89,7 +93,10 @@ export default function LoginPage() {
                     Tampilkan Password
                 </div>
             </div>
-            <button className="px-4 py-2 font-bold text-blue-700 bg-white rounded hover:opacity-70">
+            <button
+                disabled={loading}
+                className="px-4 py-2 font-bold text-blue-700 bg-white rounded button-disabled hover:opacity-70"
+            >
                 LOGIN
             </button>
         </form>

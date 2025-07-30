@@ -24,8 +24,8 @@ export default function DashboardPage() {
     return (
         <div className="flex flex-col w-full h-screen gap-10 ">
             <DashboardHeader />
-            <DashboardCard data={kelompok[0]} />
-            <DashboardChart />
+            <DashboardCard data={kelompok[0]} kategori={asrama} />
+            <DashboardChart params={Number(params.id)} />
         </div>
     );
 }

@@ -13,23 +13,26 @@ import {
 } from "@/components/ui/sidebar";
 import { ChevronRight, LogOut } from "lucide-react";
 import { sidebarMenu } from "./sidebar.data";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
-const items = sidebarMenu;
+import { useQuery } from "@tanstack/react-query";
+import { getKelompokById } from "@/controller/kelompok.service";
+import { signOut } from "next-auth/react";
 
 export function AppSidebar() {
     const path = usePathname();
     const params = useParams();
     const segments = path.split("/").filter(Boolean);
-    const firstPath = segments[0] ?? "Dashboard";
     const lastPath = segments[segments.length - 1];
     const router = useRouter();
+
+    const { data: kelompok, isSuccess } = useQuery({
+        queryKey: ["kelompok", params?.id],
+        queryFn: async () => {
+            const res = await getKelompokById(Number(params.id));
+            return res;
+        },
+    });
 
     return (
         <Sidebar variant="sidebar">
@@ -45,9 +48,15 @@ export function AppSidebar() {
                             <button
                                 key={index}
                                 onClick={() => {
-                                    router.push(`/${params.id}/${data.url}`);
+                                    router.push(
+                                        `/landing/${params.id}/${data.url}`
+                                    );
                                 }}
-                                className="flex items-center rounded-[10px] gap-3 px-3 py-4 bg-transparent hover:bg-palette-100 hover:text-palette text-palette-500 "
+                                className={`flex items-center ${
+                                    data.active === lastPath
+                                        ? "bg-palette-100"
+                                        : "bg-transparent"
+                                } rounded-[10px] gap-3 px-3 py-4 hover:bg-palette-100 hover:text-palette text-palette-500`}
                             >
                                 <data.icon />
                                 {data.title}
@@ -58,14 +67,19 @@ export function AppSidebar() {
             </SidebarContent>
             <hr className="w-[80%] mx-auto " />
             <SidebarFooter className="flex flex-col gap-3 p-5">
-                <div className="text-2xl font-semibold capitalize">
-                    PP Putra
-                </div>
+                {isSuccess && (
+                    <div className="text-2xl font-semibold capitalize">
+                        {kelompok[0]?.nama}
+                    </div>
+                )}
                 <SidebarMenuButton asChild>
                     <Button
                         variant="outline"
                         className="justify-between w-full border-red-600"
-                        // onClick={logout}
+                        onClick={() => {
+                            signOut();
+                            router.push("/");
+                        }}
                     >
                         <p>Logout</p>
                         <LogOut className="w-4 h-4" />

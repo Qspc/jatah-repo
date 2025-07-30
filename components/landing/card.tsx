@@ -14,6 +14,7 @@ import { getAllSantri } from "@/controller/santri.service";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import LandingDialog from "./form.dialog";
+import { Badge } from "@/components/ui/badge";
 
 export default function CardLandingPage() {
     const { data, isSuccess } = useQuery({
@@ -32,19 +33,25 @@ export default function CardLandingPage() {
                     {data.map((res: any, index: any) => (
                         <Card
                             key={index}
-                            onClick={() => router.push(`/${res.id}/dashboard`)}
-                            className="flex flex-row items-center justify-between cursor-pointer max-h-28 min-w-96"
+                            className="flex flex-row items-center justify-between bg-white max-h-28 min-w-96"
                         >
                             <CardHeader className="flex flex-col gap-1.5 w-[80%]">
-                                <CardTitle className="text-[18px] overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
+                                <CardTitle className="text-[18px] capitalize overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
                                     {res.nama}
                                 </CardTitle>
                                 <CardDescription className="text-[14px] font-medium">
-                                    {res.alamat}
+                                    <Badge>{res.total_santri} Santri</Badge>
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <button className="py-2 px-4 cursor-pointer text-sm bg-[#3C3C43] rounded-[12px] text-white">
+                                <button
+                                    onClick={() =>
+                                        router.push(
+                                            `/landing/${res.id}/dashboard`
+                                        )
+                                    }
+                                    className="px-4 py-2 text-sm button-primary"
+                                >
                                     Masuk
                                 </button>
                             </CardContent>

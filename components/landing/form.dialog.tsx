@@ -1,5 +1,6 @@
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogDescription,
     DialogHeader,
@@ -13,9 +14,17 @@ import { Card, CardHeader } from "../ui/card";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useState } from "react";
+import ErrorMessage from "../layout/error.mesage";
+import RequiredSign from "../layout/required";
 
 export default function LandingDialog() {
-    const { register, control, handleSubmit } = useForm<KelompokProps>();
+    const {
+        register,
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm<KelompokProps>();
     const queryClient = useQueryClient();
     const [open, setOpen] = useState(false);
 
@@ -37,13 +46,13 @@ export default function LandingDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
-                <Card className="flex flex-row items-center cursor-pointer justify-center min-w-96 max-h-28 border-dashed border-2 border-gray-300 hover:border-[#3C3C43] transition-colors">
+                <Card className="flex flex-row items-center justify-center transition-colors border-2 border-gray-300 border-dashed cursor-pointer group min-w-96 max-h-28">
                     <CardHeader className="flex flex-col gap-1.5 w-full items-center justify-center">
                         <div
-                            className="flex cursor-pointer flex-col items-center justify-center w-full text-[#3C3C43] hover:bg-gray-100 rounded-[12px] transition-colors"
+                            className="flex cursor-pointer flex-col items-center justify-center w-full group-hover:bg-white group-hover:text-palette-500 text-white bg-palette rounded-[12px] p-1 transition-colors"
                             aria-label="Add new content"
                         >
-                            <span className="mb-2 text-3xl">＋</span>
+                            <span className="mb-1 text-3xl">＋</span>
                             <span className="text-[16px] font-medium">
                                 Tambah Baru
                             </span>
@@ -58,29 +67,55 @@ export default function LandingDialog() {
                         onSubmit={handleSubmit(onSubmit)}
                         className="flex flex-col gap-8"
                     >
-                        <div className="flex gap-2 items-center *:w-1/3">
+                        <div className="flex flex-col gap-4">
                             <div className="flex flex-col gap-1 ">
-                                <label htmlFor="nama">Nama</label>
+                                <label htmlFor="nama">
+                                    Nama Kelompok
+                                    <RequiredSign />
+                                </label>
                                 <input
-                                    {...register("nama", { required: true })}
+                                    {...register("nama", {
+                                        required: "Name Kelompok belum diisi",
+                                    })}
                                     type="text"
-                                    placeholder="nama"
+                                    placeholder="nama kelompok"
                                     className="w-full px-1 py-2 pl-2 text-black bg-transparent border rounded border-palette"
                                 />
+                                {errors.nama && (
+                                    <ErrorMessage
+                                        error={errors.nama?.message}
+                                    />
+                                )}
                             </div>
                             <div className="flex flex-col gap-1 ">
-                                <label htmlFor="nama_kategori">Alamat</label>
+                                <label htmlFor="nama_kategori">
+                                    Nama Kategori
+                                </label>
                                 <input
-                                    {...register("nama_kategori", {})}
+                                    {...register("nama_kategori")}
                                     type="text"
-                                    placeholder="nama_kategori"
+                                    placeholder="asrama"
                                     className="w-full px-1 py-2 pl-2 text-black bg-transparent border rounded border-palette"
                                 />
+                                {errors.nama && (
+                                    <ErrorMessage
+                                        error={errors.nama?.message}
+                                    />
+                                )}
                             </div>
                         </div>
-
-                        <div>
-                            <button>Tambah</button>
+                        <div className="flex flex-row-reverse gap-2">
+                            <button type="submit" className="button-primary ">
+                                Tambah
+                            </button>
+                            <DialogClose>
+                                <div
+                                    onClick={() => reset()}
+                                    className="button-delete"
+                                >
+                                    Batal
+                                </div>
+                            </DialogClose>
                         </div>
                     </form>
                 </DialogHeader>
