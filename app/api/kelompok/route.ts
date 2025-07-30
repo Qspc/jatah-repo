@@ -3,6 +3,29 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
     try {
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+        if (id) {
+            const { data, error } = await supabase
+                .from("kelompok")
+                .select("*")
+                .eq("id", id);
+            if (error) {
+                return new NextResponse(
+                    JSON.stringify({
+                        message: error.message,
+                        status: 500,
+                    }),
+                    {
+                        status: 500,
+                        headers: { "Content-Type": "application/json" },
+                    }
+                );
+            }
+
+            return NextResponse.json(data);
+        }
+
         const { data, error } = await supabase.from("kelompok").select("*");
         if (error) {
             return new NextResponse(
@@ -36,7 +59,10 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { error } = await supabase.from("kelompok").insert(body);
+        const { error } = await supabase
+            .from("kelompok")
+            .insert([body])
+            .select();
 
         if (error) {
             return new NextResponse(

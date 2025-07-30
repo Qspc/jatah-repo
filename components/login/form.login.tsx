@@ -1,9 +1,12 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { LoginFormProps } from "@/types/login";
+import { useState } from "react";
+import ErrorMessage from "../layout/error.mesage";
+import { toast } from "sonner";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -13,54 +16,80 @@ export default function LoginPage() {
         reset,
         formState: { errors },
     } = useForm<LoginFormProps>();
-    const queryClient = useQueryClient();
+    const [showPassword, setShowPassword] = useState(false);
     const route = useRouter();
 
-    //   const { mutateAsync } = useMutation<any, Error, IndustriesFormprops>({
-    //     mutationFn: async (data) => await createIndustries(data),
-    //     onSuccess: () => {
-    //     },
-    //     onError: (error: any) => {
-    //     },
-    //   });
-
-    const onSubmit = async () => {
-        alert("Login success");
-        route.push("/landing");
+    const onSubmit = async (data: LoginFormProps) => {
+        try {
+            // alert(JSON.stringify(data));
+            signIn("credentials", { ...data }).then(async (res) => {
+                if (res?.ok) {
+                    const session = await getSession();
+                    console.log({ res });
+                }
+            });
+            // toast.success("Selamat datang");
+            route.push("/landing");
+        } catch (error) {
+            toast.error("Proses gagal");
+        }
     };
 
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex md:w-1/5 w-2/3 *:w-full flex-col gap-10 pb-40"
+            className="flex z-50 md:w-1/5 w-2/3 *:w-full flex-col gap-10 pb-40"
         >
-            <div className="flex flex-col gap-4">
-                <div className="relative">
-                    <FontAwesomeIcon
-                        icon={faUser}
-                        className="absolute w-4 h-4 left-3 top-1/2 -translate-y-1/2 text-white"
-                    />
-                    <input
-                        {...register("username", { required: true })}
-                        type="text"
-                        placeholder="USERNAME"
-                        className="py-3 px-2 w-full bg-transparent border pl-10 text-white border-white rounded"
-                    />
+            <div className="flex flex-col gap-4 text-white">
+                <div className="flex flex-col gap-1">
+                    <div className="relative">
+                        <FontAwesomeIcon
+                            icon={faUser}
+                            className="absolute w-4 h-4 text-white -translate-y-1/2 left-3 top-1/2"
+                        />
+                        <input
+                            {...register("username", {
+                                required: "Username belum diisi.",
+                            })}
+                            type="text"
+                            placeholder="USERNAME"
+                            className="w-full px-2 py-3 pl-10 text-white border border-white rounded bg-palette"
+                        />
+                    </div>
+                    {errors.username && (
+                        <ErrorMessage error={errors.username.message} />
+                    )}
                 </div>
-                <div className="relative">
-                    <FontAwesomeIcon
-                        icon={faLock}
-                        className="absolute w-4 h-4 left-3 top-1/2 -translate-y-1/2 text-white"
-                    />
+                <div className="flex flex-col gap-1">
+                    <div className="relative">
+                        <FontAwesomeIcon
+                            icon={faLock}
+                            className="absolute w-4 h-4 text-white -translate-y-1/2 left-3 top-1/2"
+                        />
+                        <input
+                            {...register("password", {
+                                required: "Password belum diisi.",
+                            })}
+                            type={showPassword ? "text" : "password"}
+                            placeholder="PASSWORD"
+                            className="w-full px-2 py-3 pl-10 text-white border border-white rounded bg-palette"
+                        />
+                    </div>
+                    {errors.password && (
+                        <ErrorMessage error={errors.password.message} />
+                    )}
+                </div>
+                <div className="flex items-center gap-2">
                     <input
-                        {...register("password", { required: true })}
-                        type="password"
-                        placeholder="PASSWORD"
-                        className="py-3 px-2 w-full bg-transparent border pl-10 text-white border-white rounded"
-                    />
-                </div>{" "}
+                        width={20}
+                        height={20}
+                        onChange={() => setShowPassword(!showPassword)}
+                        type="checkbox"
+                    />{" "}
+                    Tampilkan Password
+                </div>
             </div>
-            <button className="bg-white hover:opacity-70  text-blue-700 font-bold py-2 px-4 rounded">
+            <button className="px-4 py-2 font-bold text-blue-700 bg-white rounded hover:opacity-70">
                 LOGIN
             </button>
         </form>

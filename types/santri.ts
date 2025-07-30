@@ -5,6 +5,6 @@ export interface SantryProps {
     deskripsi: string;
     jatah: number;
     saldo: number;
-    tanggal_menabung: Date;
+    tanggal_menabung: string;
     asrama_id: number;
 }

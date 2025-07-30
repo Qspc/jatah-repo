@@ -11,6 +11,8 @@ import { SantryProps } from "@/types/santri";
 import { useForm } from "react-hook-form";
 import Select, { OptionProps } from "react-select";
 import { Controller } from "react-hook-form";
+import { dateFormatApi } from "../convert/num";
+import supabase from "@/lib/db";
 
 export default function SantriDialog({ allSantri }: any) {
     const { register, control, handleSubmit } = useForm<SantryProps>();
@@ -23,13 +25,22 @@ export default function SantriDialog({ allSantri }: any) {
     const onSubmit = async (data: SantryProps) => {
         const newData = {
             ...data,
+            tanggal_menabung: dateFormatApi(new Date()),
             saldo: +data.saldo,
             jatah: +data.jatah,
             asrama_id: +data?.asrama_id?.value,
         };
-        // return console.log(JSON.stringify(newData));
-        const res = await createSantri(newData);
-        console.log({ res });
+        // return alert(JSON.stringify(newData));
+        const result = await supabase
+            .from("kelompok")
+            .insert([
+                {
+                    nama: "PP Putri",
+                },
+            ])
+            .select();
+        // const res = await createSantri(newData);
+        console.log({ result });
     };
 
     return (

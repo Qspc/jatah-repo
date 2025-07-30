@@ -13,6 +13,7 @@ import { getAllKelompok } from "@/controller/kelompok.service";
 import { getAllSantri } from "@/controller/santri.service";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import LandingDialog from "./form.dialog";
 
 export default function CardLandingPage() {
     const { data, isSuccess } = useQuery({
@@ -51,19 +52,7 @@ export default function CardLandingPage() {
                     ))}
                 </>
             )}
-            <Card className="flex flex-row items-center cursor-pointer justify-center min-w-96 max-h-28 border-dashed border-2 border-gray-300 hover:border-[#3C3C43] transition-colors">
-                <CardHeader className="flex flex-col gap-1.5 w-full items-center justify-center">
-                    <button
-                        className="flex cursor-pointer flex-col items-center justify-center w-full text-[#3C3C43] hover:bg-gray-100 rounded-[12px] transition-colors"
-                        aria-label="Add new content"
-                    >
-                        <span className="mb-2 text-3xl">＋</span>
-                        <span className="text-[16px] font-medium">
-                            Tambah Baru
-                        </span>
-                    </button>
-                </CardHeader>
-            </Card>
+            <LandingDialog />
         </div>
     );
 }

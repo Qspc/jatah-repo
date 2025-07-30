@@ -37,20 +37,18 @@ export async function POST(req: Request) {
     try {
         const body = await req.json();
         console.log(body);
-        const { error } = await supabase
-            .from("santri")
-            .insert(Array.isArray(body) ? body : [body]);
-        console.log(JSON.stringify(error));
+        const result = await supabase.from("santri").insert([body]).select();
+        console.log(JSON.stringify(result));
 
-        if (error) {
-            return new NextResponse(
-                JSON.stringify({
-                    message: error.message,
-                    status: 500,
-                }),
-                { status: 500, headers: { "Content-Type": "application/json" } }
-            );
-        }
+        // if (error) {
+        //     return new NextResponse(
+        //         JSON.stringify({
+        //             message: error.message,
+        //             status: 500,
+        //         }),
+        //         { status: 500, headers: { "Content-Type": "application/json" } }
+        //     );
+        // }
 
         return NextResponse.json(
             { message: "Data inserted successfully" },
