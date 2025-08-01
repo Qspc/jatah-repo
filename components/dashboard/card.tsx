@@ -14,13 +14,15 @@ export default function DashboardCard({ data, kategori }: any) {
             <div className="p-7 w-[280px] flex flex-col gap-1.5 bg-white rounded-[10px] shadow-md">
                 <div className="font-light text-[20px]">Total Santri</div>
                 <div className="text-4xl font-semibold">
-                    {data?.total_santri ? data?.total_santri : "-"}
+                    {data?.total_santri ? data?.total_santri : "-"}{" "}
+                    {/* <span className="font-light text-[18px]">Santri</span> */}
                 </div>
             </div>
             <div className="p-7 w-[280px] flex flex-col gap-1.5 bg-white rounded-[10px] shadow-md">
                 <div className="font-light text-[20px]">Total {kategori}</div>
                 <div className="text-4xl font-semibold">
                     {data?.jumlah_asrama ? data?.jumlah_asrama : "-"}
+                    {/* <span className="font-light text-[18px]">{kategori}</span> */}
                 </div>
             </div>
         </div>

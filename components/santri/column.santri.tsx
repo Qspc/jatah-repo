@@ -29,5 +29,12 @@ export const columnSantri: ColumnDef<any>[] = [
     {
         accessorKey: "id",
         header: "Aksi",
+        cell: (info) => {
+            return (
+                <div>
+                    <button className="button-primary">Bagikan jatah</button>
+                </div>
+            );
+        },
     },
 ];

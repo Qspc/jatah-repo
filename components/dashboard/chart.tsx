@@ -86,7 +86,7 @@ export default function DashboardChart({ params }: props) {
     };
 
     return (
-        <div className="w-2/3">
+        <div className="w-full">
             <MultiAxisChart data={data} options={options} />
         </div>
     );

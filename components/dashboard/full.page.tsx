@@ -22,7 +22,7 @@ export default function DashboardPage() {
     if (isLoading) return <>loading</>;
 
     return (
-        <div className="flex flex-col w-full h-screen gap-10 ">
+        <div className="flex flex-col w-full gap-10 ">
             <DashboardHeader />
             <DashboardCard data={kelompok[0]} kategori={asrama} />
             <DashboardChart params={Number(params.id)} />

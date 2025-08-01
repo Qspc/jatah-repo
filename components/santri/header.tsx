@@ -5,12 +5,18 @@ import Select from "react-select";
 import { useRouter } from "next/navigation";
 import { useAsrama } from "./use.context";
 
-export default function SantriHeader({ santri }: any) {
+interface props {
+    santri: any;
+    information: any;
+    setInformation: any;
+}
+
+export default function SantriHeader({
+    santri,
+    information,
+    setInformation,
+}: props) {
     const { setAsramaId } = useAsrama();
-    const [information, setInformation] = useState({
-        jatah: santri ? santri[0]?.jumlah_jatah : 0,
-        santri: santri ? santri[0]?.jumlah_santri : 0,
-    });
     const selectValue =
         santri?.map((item: { id: string; nama: string }) => ({
             value: item.id,
@@ -27,6 +33,7 @@ export default function SantriHeader({ santri }: any) {
             setInformation({
                 jatah: pick.jumlah_jatah,
                 santri: pick.jumlah_santri,
+                nama: pick.nama,
             });
         }
     };
@@ -41,17 +48,19 @@ export default function SantriHeader({ santri }: any) {
                     onChange={handleChange}
                 />
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-row-reverse w-2/5 *:w-1/2  gap-4">
                 <div className="p-7 flex flex-col gap-1.5 bg-white rounded-[10px] shadow-md">
                     <div className="font-light text-[20px]">Total Jatah</div>
                     <div className="text-4xl font-semibold">
-                        {formatToThreeDigit(information?.jatah)}{" "}
+                        {information?.jatah
+                            ? formatToThreeDigit(information?.jatah)
+                            : "-"}{" "}
                     </div>
                 </div>
                 <div className="p-7 flex flex-col gap-1.5 bg-white rounded-[10px] shadow-md">
                     <div className="font-light text-[20px]">Total Santri</div>
                     <div className="text-4xl font-semibold">
-                        {information?.santri}
+                        {information?.santri ? information?.santri : "-"}
                     </div>
                 </div>
             </div>
