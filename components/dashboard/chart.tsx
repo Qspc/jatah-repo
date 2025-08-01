@@ -2,11 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import MultiAxisChart from "../chart/multi.line";
 import { getAllAsrama } from "@/controller/asrama.service";
 import { useState } from "react";
+import { LoadingButton, LoadingPage } from "../layout/loading";
 interface props {
     params: number;
+    isLoading: boolean;
 }
 
-export default function DashboardChart({ params }: props) {
+export default function DashboardChart({ params, isLoading }: props) {
     const [maxSantri, setMaxSantri] = useState(0);
     const [maxJatah, setMaxJatah] = useState(0);
     const { data: allAsrama } = useQuery({
@@ -87,7 +89,17 @@ export default function DashboardChart({ params }: props) {
 
     return (
         <div className="w-full">
-            <MultiAxisChart data={data} options={options} />
+            {isLoading ? (
+                <div className="flex items-center justify-center w-full h-40 mb-10 ">
+                    <LoadingPage />
+                </div>
+            ) : (
+                <>
+                    {allAsrama && allAsrama?.length > 0 && (
+                        <MultiAxisChart data={data} options={options} />
+                    )}
+                </>
+            )}
         </div>
     );
 }

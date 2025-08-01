@@ -56,12 +56,104 @@
   }
 } */
 
+.loader {
+    width: 100px;
+    height: 100px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    border-top: 5px solid #e74c3c;
+    position: relative;
+    animation: load 2s linear infinite;
+}
+
+.loader::before,
+.loader::after {
+    content: "";
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    border-radius: 50%;
+}
+
+.loader::before {
+    border-top: 5px solid #e67e22;
+    transform: rotate(120deg);
+}
+
+.loader::after {
+    border-top: 5px solid #3498db;
+    transform: rotate(240deg);
+}
+
+.loader span {
+    position: absolute;
+    font-size: small;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    animation: a2 2s linear infinite;
+}
+
+@keyframes load {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes a2 {
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+.spinner {
+    width: 1.5em;
+    transform-origin: center;
+    animation: rotate4 2s linear infinite;
+}
+
+.spinner circle {
+    fill: none;
+    stroke: white;
+    stroke-width: 2;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash4 {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 90, 200;
+        stroke-dashoffset: -35px;
+    }
+
+    100% {
+        stroke-dashoffset: -125px;
+    }
+}
+
 @layer components {
     .main-title {
         @apply text-palette-500 font-bold capitalize text-4xl;
     }
     .button-primary {
-        @apply py-2 px-4 bg-palette capitalize text-white rounded-[10px] hover:bg-palette-100 transition-all duration-100 ease-in-out;
+        @apply py-2 px-4 bg-palette capitalize text-white rounded-[10px] hover:bg-palette-100 transition-all duration-100 ease-in-out disabled:cursor-not-allowed disabled:opacity-50  disabled:hover:opacity-50;
     }
     .button-delete {
         @apply py-2 px-4 bg-red-700 capitalize text-white rounded-[10px] hover:bg-red-700/60 transition-all duration-100 ease-in-out;

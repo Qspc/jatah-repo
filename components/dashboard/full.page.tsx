@@ -19,13 +19,15 @@ export default function DashboardPage() {
         },
     });
 
-    if (isLoading) return <>loading</>;
-
     return (
         <div className="flex flex-col w-full gap-10 ">
-            <DashboardHeader />
-            <DashboardCard data={kelompok} kategori={asrama} />
-            <DashboardChart params={Number(params.id)} />
+            <DashboardHeader isLoading={isLoading} />
+            <DashboardCard
+                isLoading={isLoading}
+                data={kelompok}
+                kategori={asrama}
+            />
+            <DashboardChart isLoading={isLoading} params={Number(params.id)} />
         </div>
     );
 }

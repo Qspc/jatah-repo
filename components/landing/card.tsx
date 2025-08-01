@@ -8,16 +8,15 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { getAllAsrama } from "@/controller/asrama.service";
 import { getAllKelompok } from "@/controller/kelompok.service";
-import { getAllSantri } from "@/controller/santri.service";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import LandingDialog from "./form.dialog";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "../ui/skeleton";
 
 export default function CardLandingPage() {
-    const { data, isSuccess } = useQuery({
+    const { data, isSuccess, isLoading } = useQuery({
         queryKey: ["kelompok"],
         queryFn: async () => {
             const data = getAllKelompok();
@@ -28,7 +27,17 @@ export default function CardLandingPage() {
 
     return (
         <div className="flex flex-wrap items-center justify-center gap-8">
-            {isSuccess && data && data.length > 0 && (
+            {isLoading ? (
+                <Card className="flex flex-row items-center justify-between bg-white max-h-28 min-w-96">
+                    <CardHeader className="flex flex-col gap-1.5 w-[80%]">
+                        <Skeleton className="w-full h-4 rounded-full "></Skeleton>
+                        <Skeleton className="w-3/4 h-4 rounded-full "></Skeleton>
+                    </CardHeader>
+                    <CardContent>
+                        <Skeleton className="w-16 h-8 rounded-full "></Skeleton>
+                    </CardContent>
+                </Card>
+            ) : (
                 <>
                     {data.map((res: any, index: any) => (
                         <Card

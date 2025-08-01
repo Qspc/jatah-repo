@@ -1,8 +1,5 @@
 "use client";
 import { useParams } from "next/navigation";
-import PengaturanEdit from "./form.edit";
-import { useQuery } from "@tanstack/react-query";
-import { getAllKelompok, getKelompokById } from "@/controller/kelompok.service";
 import PengaturanKelompok from "./content.kelompok";
 import PengaturanAsrama from "./content.asrama";
 import PengaturanSantri from "./content.santri";

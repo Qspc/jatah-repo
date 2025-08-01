@@ -1,8 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { capitalizeFirstWord } from "../convert/typing";
 import { dateFormatTable, formatToThreeDigit } from "../convert/num";
+import { SantryProps } from "@/types/santri";
 
-export const columnSantri: ColumnDef<any>[] = [
+export const columnSantri: ColumnDef<SantryProps>[] = [
     {
         accessorKey: "nama",
         header: "Nama",

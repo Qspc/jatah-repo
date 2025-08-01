@@ -8,6 +8,12 @@ import { useAsrama } from "./use.context";
 import { useParams } from "next/navigation";
 import SantriTitle from "./title";
 
+export interface informationProps {
+    jatah?: number;
+    santri?: number;
+    nama?: string;
+}
+
 export default function SantriPage() {
     const { setAsramaId } = useAsrama();
     const params = useParams();
@@ -21,23 +27,22 @@ export default function SantriPage() {
         },
     });
 
-    const [information, setInformation] = useState({
+    const [information, setInformation] = useState<informationProps>({
         jatah: allAsrama ? allAsrama[0]?.jumlah_jatah : 0,
         santri: allAsrama ? allAsrama[0]?.jumlah_santri : 0,
-        nama: allAsrama ? allAsrama[0]?.nama : "-",
+        nama: allAsrama ? allAsrama[0]?.nama : "",
     });
-
-    if (isLoading) return <>loading</>;
 
     return (
         <div className="flex flex-col w-full gap-10">
             <SantriTitle />
             <SantriHeader
+                isLoading={isLoading}
                 santri={allAsrama}
                 information={information}
                 setInformation={setInformation}
             />
-            <SantriBody nama={information.nama} />
+            <SantriBody isLoading={isLoading} nama={information.nama} />
         </div>
     );
 }

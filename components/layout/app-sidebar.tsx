@@ -6,10 +6,7 @@ import {
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
-    SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarMenuSub,
 } from "@/components/ui/sidebar";
 import { ChevronRight, LogOut } from "lucide-react";
 import { sidebarMenu } from "./sidebar.data";
@@ -18,6 +15,7 @@ import { Button } from "../ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { getKelompokById } from "@/controller/kelompok.service";
 import { signOut } from "next-auth/react";
+import { Skeleton } from "../ui/skeleton";
 
 export function AppSidebar() {
     const path = usePathname();
@@ -26,7 +24,7 @@ export function AppSidebar() {
     const lastPath = segments[segments.length - 1];
     const router = useRouter();
 
-    const { data: kelompok, isSuccess } = useQuery({
+    const { data: kelompok, isLoading } = useQuery({
         queryKey: ["kelompok", params?.id],
         queryFn: async () => {
             const res = await getKelompokById(Number(params.id));
@@ -67,7 +65,9 @@ export function AppSidebar() {
             </SidebarContent>
             <hr className="w-[80%] mx-auto " />
             <SidebarFooter className="flex flex-col gap-3 p-5">
-                {isSuccess && (
+                {isLoading ? (
+                    <Skeleton className="w-2/3 h-8 rounded-full "></Skeleton>
+                ) : (
                     <div className="text-2xl font-semibold capitalize">
                         {kelompok?.nama}
                     </div>
