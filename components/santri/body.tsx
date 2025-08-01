@@ -44,7 +44,7 @@ export default function SantriBody({ nama }: any) {
                         "w-[15%]",
                         "w-[10%]",
                         "w-[20%]",
-                        "w-[15%]",
+                        "text-center w-[15%]",
                     ]}
                     data={allSantri}
                     columns={columnSantri}

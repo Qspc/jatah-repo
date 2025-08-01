@@ -69,7 +69,7 @@ export function AppSidebar() {
             <SidebarFooter className="flex flex-col gap-3 p-5">
                 {isSuccess && (
                     <div className="text-2xl font-semibold capitalize">
-                        {kelompok[0]?.nama}
+                        {kelompok?.nama}
                     </div>
                 )}
                 <SidebarMenuButton asChild>

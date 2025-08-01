@@ -9,7 +9,8 @@ export async function GET(req: Request) {
             const { data, error } = await supabase
                 .from("kelompok")
                 .select("*")
-                .eq("id", id);
+                .eq("id", id)
+                .single();
             if (error) {
                 return new NextResponse(
                     JSON.stringify({

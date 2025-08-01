@@ -31,7 +31,10 @@ export const columnSantri: ColumnDef<any>[] = [
         header: "Aksi",
         cell: (info) => {
             return (
-                <div>
+                <div className="flex flex-col gap-2">
+                    <button className="button-primary hover:bg-palette-100/50 bg-palette-100 ">
+                        Tambah Tabungan
+                    </button>
                     <button className="button-primary">Bagikan jatah</button>
                 </div>
             );

@@ -87,6 +87,7 @@ export default function LoginPage() {
                     <input
                         width={20}
                         height={20}
+                        className={`w-4 h-4 border-2 checked:border-white checked:bg-palette-100 bg-transparent rounded cursor-pointer transition duration-200`}
                         onChange={() => setShowPassword(!showPassword)}
                         type="checkbox"
                     />{" "}
