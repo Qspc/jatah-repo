@@ -21,7 +21,7 @@ export const updateKelompok = async (data: KelompokProps) => {
     return res ? res : null;
 };
 
-export const deleteKelompok = async (data: any) => {
-    const res = await callApi("DELETE", `/api/kelompok`, data);
+export const deleteKelompok = async (data: number) => {
+    const res = await callApi("DELETE", `/api/kelompok`, { id: data });
     return res ? res : null;
 };

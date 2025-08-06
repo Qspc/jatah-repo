@@ -1,11 +1,18 @@
 "use client";
-import { getKelompokById } from "@/controller/kelompok.service";
+import { deleteKelompok, getKelompokById } from "@/controller/kelompok.service";
 import LandingDialog from "../landing/form.dialog";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "../ui/skeleton";
 import { LoadingButton } from "../layout/loading";
+import { DialogConfirmation } from "../ui/dialog-confirmation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function PengaturanKelompok({ id }: any) {
+    const [open, setOpen] = useState(false);
+    const queryClient = useQueryClient();
+    const router = useRouter();
     const { data: kelompok, isLoading } = useQuery({
         queryKey: ["kelompok", id],
         queryFn: async () => {
@@ -13,6 +20,26 @@ export default function PengaturanKelompok({ id }: any) {
             return res;
         },
     });
+
+    const handleDelete = async () => {
+        try {
+            if (!id) {
+                return toast.error("ID kelompok tidak ditemukan");
+            }
+
+            // return alert("berhaisl");
+            const res = await deleteKelompok(id);
+            setOpen(false);
+            toast.success("Kelompok berhaisl dihapus");
+            router.push("/landing");
+            queryClient.invalidateQueries({
+                queryKey: ["kelompok"],
+                exact: false,
+            });
+        } catch (error) {
+            toast.error("Gagal menghapus kelompok");
+        }
+    };
 
     return (
         <div className="flex flex-col gap-2">
@@ -25,20 +52,36 @@ export default function PengaturanKelompok({ id }: any) {
                 ) : (
                     <div className="capitalize">{kelompok?.nama} </div>
                 )}
-                <div className="flex items-center gap-2">
-                    <button
-                        disabled={isLoading}
-                        className="flex items-center gap-2 button-primary "
-                    >
-                        {isLoading && <LoadingButton />} edit
-                    </button>
-                    <button
-                        disabled={isLoading}
-                        className="flex items-center gap-2 button-delete "
-                    >
-                        {isLoading && <LoadingButton />} hapus
-                    </button>
-                </div>
+                {isLoading ? (
+                    <div className="flex items-center gap-2">
+                        <Skeleton className="w-16 h-12 rounded-2xl" />
+                        <Skeleton className="w-24 h-12 rounded-2xl" />
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <LandingDialog
+                            req="edit"
+                            data={kelompok}
+                            buttonTrigger={
+                                <div className="flex items-center gap-2 button-primary ">
+                                    edit
+                                </div>
+                            }
+                        />
+                        <DialogConfirmation
+                            buttonTrigger={
+                                <div className="flex items-center gap-2 button-delete ">
+                                    hapus
+                                </div>
+                            }
+                            open={open}
+                            openChange={setOpen}
+                            handleAction={handleDelete}
+                            title={`Anda yakin ingin menghapus ${kelompok?.nama}?`}
+                            description={`Dengan menghapus ${kelompok?.nama}, semua data yang terkait seperti data santri, data asrama dan data lainnya akan ikut terhapus secara permanen.`}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

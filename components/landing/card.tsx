@@ -68,7 +68,23 @@ export default function CardLandingPage() {
                     ))}
                 </>
             )}
-            <LandingDialog />
+            <LandingDialog
+                buttonTrigger={
+                    <Card className="flex flex-row items-center justify-center transition-colors border-2 border-gray-300 border-dashed cursor-pointer group min-w-96 max-h-28">
+                        <CardHeader className="flex flex-col gap-1.5 w-full items-center justify-center">
+                            <div
+                                className="flex cursor-pointer flex-col items-center justify-center w-full group-hover:bg-white group-hover:text-palette-500 text-white bg-palette rounded-[12px] p-1 transition-colors"
+                                aria-label="Add new content"
+                            >
+                                <span className="mb-1 text-3xl">＋</span>
+                                <span className="text-[16px] font-medium">
+                                    Tambah Baru
+                                </span>
+                            </div>
+                        </CardHeader>
+                    </Card>
+                }
+            />
         </div>
     );
 }
