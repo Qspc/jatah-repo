@@ -8,8 +8,10 @@ import { DialogConfirmation } from "../ui/dialog-confirmation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
-export default function PengaturanKelompok({ id }: any) {
+interface props {
+    id: string | string[] | undefined;
+}
+export default function PengaturanKelompok({ id = "1" }: props) {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -28,7 +30,7 @@ export default function PengaturanKelompok({ id }: any) {
             }
 
             // return alert("berhaisl");
-            const res = await deleteKelompok(id);
+            const res = await deleteKelompok(Number(id));
             setOpen(false);
             toast.success("Kelompok berhaisl dihapus");
             router.push("/landing");

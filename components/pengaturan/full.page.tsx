@@ -11,7 +11,7 @@ export default function PengaturanPage() {
         <div className="flex flex-col w-full h-full gap-10">
             <div className="main-title">Pengaturan</div>
             <PengaturanKelompok id={params.id} />
-            <PengaturanAsrama id={params.id} />
+            <PengaturanAsrama id={params?.id} />
             <PengaturanSantri />
         </div>
     );

@@ -1,11 +1,23 @@
 "use client";
-import { getAllAsrama } from "@/controller/asrama.service";
-import { useQuery } from "@tanstack/react-query";
+import { deleteAsrama, getAllAsrama } from "@/controller/asrama.service";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Select from "react-select";
 import { LoadingButton } from "../layout/loading";
 import { Skeleton } from "../ui/skeleton";
+import { useState } from "react";
+import AsramaDialog from "../dashboard/form.dialog";
+import { DialogConfirmation } from "../ui/dialog-confirmation";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import supabase from "@/lib/db";
 
-export default function PengaturanAsrama({ id }: any) {
+interface props {
+    id: string | string[] | undefined;
+}
+export default function PengaturanAsrama({ id = "1" }: props) {
+    const [open, setOpen] = useState(false);
+    const queryClient = useQueryClient();
+    const router = useRouter();
     const { data: allAsrama, isLoading } = useQuery({
         queryKey: ["asrama"],
         queryFn: async () => {
@@ -18,6 +30,27 @@ export default function PengaturanAsrama({ id }: any) {
             value: item.id,
             label: item.nama,
         })) ?? [];
+    const [value, setValue] = useState(selectValue[0] || null);
+
+    const handleDelete = async () => {
+        try {
+            if (!value) {
+                setOpen(false);
+                return toast.error("ID asrama tidak ditemukan");
+            }
+
+            // return alert(JSON.stringify(value));
+            const res = await deleteAsrama(Number(value.value));
+            setOpen(false);
+            toast.success("Asrama berhaisl dihapus");
+            queryClient.invalidateQueries({
+                queryKey: ["asrama"],
+                exact: false,
+            });
+        } catch (error) {
+            toast.error("Gagal menghapus asrama");
+        }
+    };
 
     return (
         <div className="flex flex-col gap-2">
@@ -25,13 +58,13 @@ export default function PengaturanAsrama({ id }: any) {
                 <li className="font-semibold text-[24px]">Asrama</li>
             </ul>
             <div>
-                <button
-                    disabled={isLoading}
-                    className="flex items-center gap-2 button-primary "
-                >
-                    {" "}
-                    {isLoading && <LoadingButton />} Asrama Baru +
-                </button>
+                <AsramaDialog
+                    buttonTrigger={
+                        <div className="flex items-center gap-2 button-primary ">
+                            {isLoading && <LoadingButton />} Asrama Baru +
+                        </div>
+                    }
+                />
             </div>
             <div className="flex items-center justify-between w-1/2">
                 {isLoading ? (
@@ -39,25 +72,52 @@ export default function PengaturanAsrama({ id }: any) {
                 ) : (
                     <Select
                         className="w-1/2"
+                        value={value}
                         defaultValue={selectValue[0]}
                         options={selectValue}
-                        // onChange={handleChange}
+                        onChange={(selected) => setValue(selected)}
                     />
                 )}
-                <div className="flex items-center gap-2">
-                    <button
-                        disabled={isLoading}
-                        className="flex items-center gap-2 button-primary "
-                    >
-                        {isLoading && <LoadingButton />} edit
-                    </button>
-                    <button
-                        disabled={isLoading}
-                        className="flex items-center gap-2 button-delete "
-                    >
-                        {isLoading && <LoadingButton />} hapus
-                    </button>
-                </div>
+                {isLoading ? (
+                    <div className="flex items-center gap-2">
+                        <Skeleton className="w-16 h-12 rounded-2xl" />
+                        <Skeleton className="w-24 h-12 rounded-2xl" />
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <AsramaDialog
+                            req="edit"
+                            buttonTrigger={
+                                <div
+                                    className={`flex items-center ${
+                                        !value && "cursor-not-allowed"
+                                    } gap-2 button-primary `}
+                                >
+                                    edit
+                                </div>
+                            }
+                            data={allAsrama.find(
+                                (item: any) => item.id === value?.value
+                            )}
+                        />
+                        <DialogConfirmation
+                            buttonTrigger={
+                                <div
+                                    className={`flex ${
+                                        !value && "cursor-not-allowed"
+                                    } items-center gap-2 button-delete `}
+                                >
+                                    hapus
+                                </div>
+                            }
+                            open={open}
+                            openChange={setOpen}
+                            handleAction={handleDelete}
+                            title={`Anda yakin ingin menghapus ini?`}
+                            description={`Dengan menghapus asrama ini, semua data yang terkait seperti data santri, data asrama dan data lainnya akan ikut terhapus secara permanen.`}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

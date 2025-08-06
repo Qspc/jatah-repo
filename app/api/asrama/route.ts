@@ -131,15 +131,15 @@ export async function DELETE(req: Request) {
             .delete()
             .eq("id", body.id);
 
-        // if (error) {
-        //     return new NextResponse(
-        //         JSON.stringify({
-        //             message: error.message,
-        //             status: 500,
-        //         }),
-        //         { status: 500, headers: { "Content-Type": "application/json" } }
-        //     );
-        // }
+        if (response.error) {
+            return new NextResponse(
+                JSON.stringify({
+                    message: response.error.message,
+                    status: 500,
+                }),
+                { status: 500, headers: { "Content-Type": "application/json" } }
+            );
+        }
 
         return NextResponse.json(response);
     } catch (error: any) {

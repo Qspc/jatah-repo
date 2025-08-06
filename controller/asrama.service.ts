@@ -17,6 +17,6 @@ export const updateAsrama = async (data: AsramaProps) => {
 };
 
 export const deleteAsrama = async (id: number) => {
-    const res = await callApi("DELETE", `/api/asrama?id=${id}`);
+    const res = await callApi("DELETE", `/api/asrama`, { id: id });
     return res ? res : null;
 };
