@@ -12,7 +12,7 @@ import { Button } from "./button";
 interface props {
     buttonTrigger?: React.ReactNode;
     title?: string;
-    description?: string;
+    description?: string | React.ReactNode;
     cancelTitle?: string | React.ReactNode;
     actionTitle?: string | React.ReactNode;
     handleAction: () => void;

@@ -2,6 +2,6 @@
 
 ## Do
 
--   CRUD kelompok, asrama, santri
 -   logic for santri only for theit kelompok
--   loading effect for skeleton
+-   catch error every API
+-   API for kasih jatah

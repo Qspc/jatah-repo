@@ -36,19 +36,17 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        console.log(body);
-        const result = await supabase.from("santri").insert([body]).select();
-        console.log(JSON.stringify(result));
+        const { error } = await supabase.from("santri").insert([body]).select();
 
-        // if (error) {
-        //     return new NextResponse(
-        //         JSON.stringify({
-        //             message: error.message,
-        //             status: 500,
-        //         }),
-        //         { status: 500, headers: { "Content-Type": "application/json" } }
-        //     );
-        // }
+        if (error) {
+            return new NextResponse(
+                JSON.stringify({
+                    message: error.message,
+                    status: 500,
+                }),
+                { status: 500, headers: { "Content-Type": "application/json" } }
+            );
+        }
 
         return NextResponse.json(
             { message: "Data inserted successfully" },
@@ -74,7 +72,7 @@ export async function POST(req: Request) {
     }
 }
 
-export async function PATCH(req: Request) {
+export async function PUT(req: Request) {
     try {
         const body = await req.json();
         const { error } = await supabase

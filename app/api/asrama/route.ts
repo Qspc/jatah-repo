@@ -80,7 +80,7 @@ export async function POST(req: Request) {
     }
 }
 
-export async function PATCH(req: Request) {
+export async function PUT(req: Request) {
     try {
         const body = await req.json();
         const { error } = await supabase

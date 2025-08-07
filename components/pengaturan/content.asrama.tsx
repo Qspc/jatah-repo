@@ -1,15 +1,14 @@
 "use client";
 import { deleteAsrama, getAllAsrama } from "@/controller/asrama.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import Select from "react-select";
+import Select, { SingleValue } from "react-select";
 import { LoadingButton } from "../layout/loading";
 import { Skeleton } from "../ui/skeleton";
 import { useState } from "react";
 import AsramaDialog from "../dashboard/form.dialog";
 import { DialogConfirmation } from "../ui/dialog-confirmation";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import supabase from "@/lib/db";
+import { OptionProps } from "@/types/global";
 
 interface props {
     id: string | string[] | undefined;
@@ -17,11 +16,12 @@ interface props {
 export default function PengaturanAsrama({ id = "1" }: props) {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
-    const router = useRouter();
+    const [value, setValue] = useState<OptionProps>();
     const { data: allAsrama, isLoading } = useQuery({
         queryKey: ["asrama"],
         queryFn: async () => {
             const data = await getAllAsrama(Number(id));
+            setValue({ label: data[0]?.nama, value: data[0]?.id });
             return data;
         },
     });
@@ -30,7 +30,6 @@ export default function PengaturanAsrama({ id = "1" }: props) {
             value: item.id,
             label: item.nama,
         })) ?? [];
-    const [value, setValue] = useState(selectValue[0] || null);
 
     const handleDelete = async () => {
         try {
@@ -40,7 +39,7 @@ export default function PengaturanAsrama({ id = "1" }: props) {
             }
 
             // return alert(JSON.stringify(value));
-            const res = await deleteAsrama(Number(value.value));
+            const res = await deleteAsrama(Number(value?.value));
             setOpen(false);
             toast.success("Asrama berhaisl dihapus");
             queryClient.invalidateQueries({
@@ -75,7 +74,7 @@ export default function PengaturanAsrama({ id = "1" }: props) {
                         value={value}
                         defaultValue={selectValue[0]}
                         options={selectValue}
-                        onChange={(selected) => setValue(selected)}
+                        onChange={(option) => setValue(option)}
                     />
                 )}
                 {isLoading ? (
@@ -96,9 +95,11 @@ export default function PengaturanAsrama({ id = "1" }: props) {
                                     edit
                                 </div>
                             }
-                            data={allAsrama.find(
-                                (item: any) => item.id === value?.value
-                            )}
+                            data={
+                                allAsrama?.find(
+                                    (item: any) => item.id === value?.value
+                                ) ?? null
+                            }
                         />
                         <DialogConfirmation
                             buttonTrigger={

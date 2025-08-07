@@ -17,7 +17,7 @@ import {
 import { Card, CardHeader } from "../ui/card";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ErrorMessage from "../layout/error.mesage";
 import RequiredSign from "../layout/required";
 import { AsramaProps } from "@/types/arama";
@@ -46,7 +46,7 @@ export default function AsramaDialog({
         register,
         control,
         handleSubmit,
-        watch,
+        setValue,
         reset,
         formState: { errors },
     } = useForm<FormProps>({
@@ -66,8 +66,6 @@ export default function AsramaDialog({
             return res;
         },
     });
-    watch("nama", data?.nama);
-    // watch("kelompok_id",data?.nama)
 
     const selectValue =
         allKelompok?.map((item: { id: string; nama: string }) => ({
@@ -77,19 +75,20 @@ export default function AsramaDialog({
 
     const onSubmit = async (data: FormProps) => {
         try {
-            return alert(JSON.stringify(data));
-            const newdata = {
+            if (!data.kelompok_id) return;
+
+            const newdata: AsramaProps = {
                 ...data,
-                kelompok_id: data.kelompok_id?.value,
+                kelompok_id: data.kelompok_id.value,
             };
+            // return alert(JSON.stringify(newdata));
             if (req === "edit") {
                 if (!data.id) {
                     return toast.error("ID asrama tidak ditemukan");
                 }
-                // const res = await updateAsrama(newdata);
-                // console.log({ res });
+                const res = await updateAsrama(newdata);
             } else {
-                // const res = await createAsrama(newdata);
+                const res = await createAsrama(newdata);
             }
             queryClient.invalidateQueries({
                 queryKey: ["asrama"],
@@ -105,6 +104,21 @@ export default function AsramaDialog({
             toast.error("Gagal menambahkan data");
         }
     };
+
+    useEffect(() => {
+        const getData = async () => {
+            setValue("id", data?.id);
+            setValue("nama", data?.nama);
+            const selected = allKelompok?.find(
+                (item: any) => item.id === data?.kelompok_id
+            );
+            setValue("kelompok_id", {
+                label: selected?.nama,
+                value: selected?.id,
+            });
+        };
+        getData();
+    }, [data]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -145,15 +159,17 @@ export default function AsramaDialog({
                                 <Controller
                                     name="kelompok_id"
                                     control={control}
-                                    rules={{ required: true }}
+                                    rules={{
+                                        required:
+                                            "Pilih Kelompok terlebih dahulu",
+                                    }}
                                     render={({ field }) => (
                                         <Select
                                             {...field}
                                             options={selectValue}
-                                            // defaultValue={selectValue[0]}
-                                            onChange={(option: OptionProps) =>
-                                                field.onChange(option)
-                                            }
+                                            onChange={(option) => {
+                                                field.onChange(option);
+                                            }}
                                         />
                                     )}
                                 />

@@ -17,6 +17,6 @@ export const updateSantri = async (data: SantryProps) => {
 };
 
 export const deleteSantri = async (data: number) => {
-    const res = await callApi("DELETE", `/api/santri`, data);
+    const res = await callApi("DELETE", `/api/santri`, { id: data });
     return res ? res : null;
 };

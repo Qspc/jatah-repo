@@ -12,7 +12,7 @@ export default function PengaturanPage() {
             <div className="main-title">Pengaturan</div>
             <PengaturanKelompok id={params.id} />
             <PengaturanAsrama id={params?.id} />
-            <PengaturanSantri />
+            <PengaturanSantri id={params?.id} />
         </div>
     );
 }

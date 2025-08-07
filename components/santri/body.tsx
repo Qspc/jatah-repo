@@ -59,11 +59,12 @@ export default function SantriBody({ nama, isLoading }: props) {
                     {isSuccess && (
                         <DataTable
                             cellClassname={[
-                                "w-[25%]",
+                                "w-[21%]",
                                 "w-[15%]",
                                 "w-[15%]",
                                 "w-[10%]",
-                                "w-[20%]",
+                                "w-[12%]",
+                                "w-[12%]",
                                 "text-center w-[15%]",
                             ]}
                             data={allSantri}
