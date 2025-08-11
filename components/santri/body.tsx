@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { DataTable } from "../layout/data.table";
 import { columnSantri } from "./column.santri";
 import { getAllSantri } from "@/controller/santri.service";
@@ -7,6 +7,10 @@ import SantriDialog from "./form.dialog";
 import { Search } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { LoadingButton, LoadingPage } from "../layout/loading";
+import { useState } from "react";
+import { DialogConfirmation } from "../ui/dialog-confirmation";
+import { processJatah } from "@/controller/jatah.service";
+import { toast } from "sonner";
 
 interface props {
     nama?: string;
@@ -14,6 +18,9 @@ interface props {
 }
 export default function SantriBody({ nama, isLoading }: props) {
     const { asramaId } = useAsrama();
+    const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const queryClient = useQueryClient();
     const {
         data: allSantri,
         isLoading: s2,
@@ -28,6 +35,22 @@ export default function SantriBody({ nama, isLoading }: props) {
         },
     });
 
+    const handleJatah = async () => {
+        setLoading(true);
+        try {
+            await processJatah({ asrama_id: Number(asramaId) });
+            toast.success("Jatah berhasil dibagikan");
+            setOpen(false);
+            queryClient.invalidateQueries({
+                queryKey: ["santri"],
+                exact: false,
+            });
+        } catch (error) {
+            toast.error("Gagal memproses data");
+        }
+        setLoading(false);
+    };
+
     return (
         <div className="flex flex-col w-full gap-4">
             <div className="flex items-center justify-between">
@@ -40,14 +63,27 @@ export default function SantriBody({ nama, isLoading }: props) {
                     <Search className="absolute left-2 top-2 " />
                 </div>
                 <div className="flex items-center gap-2">
-                    <button
+                    <DialogConfirmation
+                        openChange={setOpen}
+                        open={open}
+                        actionTitle="Ya, Lanjutkan"
+                        title={`Bagikan Jatah ${nama}`}
+                        description={`Apakah anda yakin ingin membagi jatah ${nama}?`}
+                        handleAction={handleJatah}
+                        buttonTrigger={
+                            <div className="flex items-center gap-2 button-primary ">
+                                {(isLoading || loading) && <LoadingButton />}
+                                Bagikan Jatah {nama}
+                            </div>
+                        }
+                    />
+                    {/* <button
                         disabled={isLoading}
                         className="flex items-center gap-2 button-primary "
                     >
                         {isLoading && <LoadingButton />}
                         Bagikan Jatah {nama}
-                    </button>
-                    {/* <SantriDialog allSantri={santri} /> */}
+                    </button> */}
                 </div>
             </div>
             {s2 ? (

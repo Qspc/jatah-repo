@@ -4,4 +4,6 @@
 
 -   logic for santri only for theit kelompok
 -   catch error every API
--   API for kasih jatah
+-   pagination and search
+-   update table
+-   update jatah supaya gak dijatah dua kali

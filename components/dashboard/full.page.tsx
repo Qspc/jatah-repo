@@ -6,6 +6,7 @@ import DashboardHeader from "./header";
 import { useQuery } from "@tanstack/react-query";
 import { getKelompokById } from "@/controller/kelompok.service";
 import { useState } from "react";
+import { DialogConfirmation } from "../ui/dialog-confirmation";
 
 export default function DashboardPage() {
     const params = useParams();
@@ -21,7 +22,7 @@ export default function DashboardPage() {
 
     return (
         <div className="flex flex-col w-full gap-10 ">
-            <DashboardHeader isLoading={isLoading} />
+            <DashboardHeader id={params.id} isLoading={isLoading} />
             <DashboardCard
                 isLoading={isLoading}
                 data={kelompok}

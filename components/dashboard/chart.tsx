@@ -3,6 +3,7 @@ import MultiAxisChart from "../chart/multi.line";
 import { getAllAsrama } from "@/controller/asrama.service";
 import { useState } from "react";
 import { LoadingButton, LoadingPage } from "../layout/loading";
+import { useRouter } from "next/navigation";
 interface props {
     params: number;
     isLoading: boolean;
@@ -11,6 +12,7 @@ interface props {
 export default function DashboardChart({ params, isLoading }: props) {
     const [maxSantri, setMaxSantri] = useState(0);
     const [maxJatah, setMaxJatah] = useState(0);
+    const router = useRouter();
     const { data: allAsrama } = useQuery({
         queryKey: ["asrama"],
         queryFn: async () => {
@@ -54,8 +56,7 @@ export default function DashboardChart({ params, isLoading }: props) {
         stacked: false,
         plugins: {
             title: {
-                display: true,
-                text: "Grafik Santri per asrama dan jatahnya",
+                display: false,
             },
         },
         scales: {
@@ -95,8 +96,22 @@ export default function DashboardChart({ params, isLoading }: props) {
                 </div>
             ) : (
                 <>
-                    {allAsrama && allAsrama?.length > 0 && (
-                        <MultiAxisChart data={data} options={options} />
+                    {allAsrama && allAsrama?.length > 0 ? (
+                        <div className="flex flex-col gap-4">
+                            <div className="w-full text-xl font-semibold text-center capitalize">
+                                Grafik Santri per asrama dan jatahnya
+                            </div>
+                            <MultiAxisChart data={data} options={options} />
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() =>
+                                router.push(`/landing/${params}/pengaturan`)
+                            }
+                            className=" button-primary"
+                        >
+                            Tambahkan Santri +
+                        </button>
                     )}
                 </>
             )}
