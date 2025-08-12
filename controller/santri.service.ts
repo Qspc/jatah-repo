@@ -1,8 +1,8 @@
 import { callApi } from "@/lib/api.service";
 import { SantryProps } from "@/types/santri";
 
-export const getAllSantri = async () => {
-    const res = await callApi("GET", `/api/santri`);
+export const getAllSantri = async (id: number, search = "") => {
+    const res = await callApi("GET", `/api/santri?search=${search}&id=${id}`);
     return res ? res : null;
 };
 

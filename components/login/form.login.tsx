@@ -8,6 +8,7 @@ import ErrorMessage from "../layout/error.mesage";
 import { toast } from "sonner";
 import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { LoadingButton } from "../layout/loading";
 
 export default function LoginPage() {
     const {
@@ -61,7 +62,10 @@ export default function LoginPage() {
                         />
                     </div>
                     {errors.username && (
-                        <ErrorMessage error={errors.username.message} />
+                        <ErrorMessage
+                            className="text-white"
+                            error={errors.username.message}
+                        />
                     )}
                 </div>
                 <div className="flex flex-col gap-1">
@@ -80,7 +84,10 @@ export default function LoginPage() {
                         />
                     </div>
                     {errors.password && (
-                        <ErrorMessage error={errors.password.message} />
+                        <ErrorMessage
+                            className="text-white"
+                            error={errors.password.message}
+                        />
                     )}
                 </div>
                 <div className="flex items-center gap-2">
@@ -98,6 +105,7 @@ export default function LoginPage() {
                 disabled={loading}
                 className="px-4 py-2 font-bold text-blue-700 bg-white rounded button-disabled hover:opacity-70"
             >
+                {loading && <LoadingButton />}
                 LOGIN
             </button>
         </form>

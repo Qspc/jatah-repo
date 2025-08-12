@@ -17,9 +17,9 @@ export default function PengaturanSantri({ id = "1" }: props) {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
     const { data: allSantri, isLoading } = useQuery({
-        queryKey: ["santri"],
+        queryKey: ["santri", id],
         queryFn: async () => {
-            const data = await getAllSantri();
+            const data = await getAllSantri(Number(id));
             setValue({ label: data[0]?.nama, value: data[0]?.id });
             return data;
         },

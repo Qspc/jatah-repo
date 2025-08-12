@@ -42,7 +42,11 @@ export default function SantriPage() {
                 information={information}
                 setInformation={setInformation}
             />
-            <SantriBody isLoading={isLoading} nama={information.nama} />
+            <SantriBody
+                id={params.id}
+                isLoading={isLoading}
+                nama={information.nama}
+            />
         </div>
     );
 }

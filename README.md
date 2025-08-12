@@ -2,8 +2,9 @@
 
 ## Do
 
--   logic for santri only for theit kelompok
 -   catch error every API
--   pagination and search
+-   pagination
 -   update table
 -   update jatah supaya gak dijatah dua kali
+-   validation for button edit & delete when not have data, issue in onChange asrama
+-   responsive design

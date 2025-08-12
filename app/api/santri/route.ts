@@ -3,7 +3,34 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
     try {
-        const { data, error } = await supabase.from("santri").select("*");
+        const { searchParams } = new URL(req.url);
+        const name = searchParams.get("search");
+        const id = searchParams.get("id");
+
+        const asrama = await supabase
+            .from("asrama")
+            .select("id")
+            .eq("kelompok_id", id);
+
+        if (!asrama || asrama.error) {
+            return new NextResponse(
+                JSON.stringify({
+                    message: "Asrama tidak ditemukan",
+                    status: 500,
+                }),
+                { status: 500, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
+        const { data, error } = await supabase
+            .from("santri")
+            .select("*")
+            .in(
+                "asrama_id",
+                asrama.data.map((item) => item.id)
+            )
+            .ilike("nama", name ? `%${name}%` : "%");
+
         if (error) {
             return new NextResponse(
                 JSON.stringify({
