@@ -43,8 +43,8 @@ export default function SantriHeader({
     };
 
     return (
-        <div className="flex items-center justify-between ">
-            <div className="flex flex-col w-1/4 gap-2">
+        <div className="flex flex-col gap-4 justify-normal md:items-center md:justify-between md:flex-row ">
+            <div className="flex flex-col w-2/3 gap-2 md:w-1/4">
                 <div>Pilih Asrama</div>
                 {isLoading ? (
                     <Skeleton className="w-full h-10 rounded-full "></Skeleton>
@@ -56,7 +56,7 @@ export default function SantriHeader({
                     />
                 )}
             </div>
-            <div className="flex flex-row-reverse w-2/5 *:w-1/2  gap-4">
+            <div className="flex flex-row-reverse w-full md:w-2/5 *:w-1/2  gap-4">
                 <div className="p-7 flex flex-col gap-1.5 bg-white rounded-[10px] shadow-md">
                     <div className="font-light text-[20px]">Total Jatah</div>
                     {isLoading ? (

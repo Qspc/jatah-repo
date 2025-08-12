@@ -57,14 +57,14 @@ export default function SantriBody({ nama, isLoading, id }: props) {
 
     return (
         <div className="flex flex-col w-full gap-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
                 <div className="relative">
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Cari..."
-                        className="pl-10 bg-white main-input min-w-96 "
+                        className="w-48 pl-10 bg-white main-input md:min-w-96 "
                     />
                     <Search className="absolute left-2 top-2 " />
                     {search && (
@@ -74,7 +74,7 @@ export default function SantriBody({ nama, isLoading, id }: props) {
                         />
                     )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="items-center gap-2 md:flex">
                     <DialogConfirmation
                         openChange={setOpen}
                         open={open}
@@ -83,7 +83,7 @@ export default function SantriBody({ nama, isLoading, id }: props) {
                         description={`Apakah anda yakin ingin membagi jatah ${nama}?`}
                         handleAction={handleJatah}
                         buttonTrigger={
-                            <div className="flex items-center gap-2 button-primary ">
+                            <div className="flex items-center gap-2 text-ellipsis button-primary ">
                                 {(isLoading || loading) && <LoadingButton />}
                                 Bagikan Jatah {nama}
                             </div>

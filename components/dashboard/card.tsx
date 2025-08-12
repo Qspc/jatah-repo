@@ -9,7 +9,7 @@ interface props {
 
 export default function DashboardCard({ data, kategori, isLoading }: props) {
     return (
-        <div className="flex gap-4">
+        <div className="flex flex-wrap justify-center gap-4 md:justify-normal">
             <div className="p-7 w-[280px] flex flex-col gap-1.5 bg-white rounded-[10px] shadow-md">
                 <div className="font-light text-[20px]">Total Jatah</div>
                 {isLoading ? (

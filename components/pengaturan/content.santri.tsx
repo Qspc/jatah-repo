@@ -65,7 +65,7 @@ export default function PengaturanSantri({ id = "1" }: props) {
                     }
                 />
             </div>
-            <div className="flex items-center justify-between w-1/2">
+            <div className="flex items-center justify-between w-full md:w-1/2">
                 {isLoading ? (
                     <Skeleton className="w-1/2 h-8 " />
                 ) : (

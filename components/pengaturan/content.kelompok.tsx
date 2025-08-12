@@ -48,7 +48,7 @@ export default function PengaturanKelompok({ id = "1" }: props) {
             <ul className="space-y-1 text-gray-800 list-disc list-inside">
                 <li className="font-semibold text-[24px]">Kelompok</li>
             </ul>
-            <div className="flex items-center justify-between w-1/2">
+            <div className="flex items-center justify-between w-full md:w-1/2">
                 {isLoading ? (
                     <Skeleton className="w-1/4 h-8 rounded-full" />
                 ) : (
