@@ -8,6 +8,7 @@ import { DialogConfirmation } from "../ui/dialog-confirmation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { usePengaturan } from "./use.context";
 interface props {
     id: string | string[] | undefined;
 }
@@ -15,12 +16,15 @@ export default function PengaturanKelompok({ id = "1" }: props) {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
     const router = useRouter();
+    const { setKelompok } = usePengaturan();
     const { data: kelompok, isLoading } = useQuery({
         queryKey: ["kelompok", id],
         queryFn: async () => {
             const res = await getKelompokById(Number(id));
+            setKelompok(res.nama_kategori);
             return res;
         },
+        enabled: !!id,
     });
 
     const handleDelete = async () => {

@@ -30,6 +30,7 @@ interface props {
     req?: string;
     data?: any;
     buttonTrigger: React.ReactNode;
+    namaKelompok?: string;
 }
 interface FormProps {
     id?: number;
@@ -41,6 +42,7 @@ export default function AsramaDialog({
     req = "create",
     data,
     buttonTrigger,
+    namaKelompok,
 }: props) {
     const {
         register,
@@ -134,8 +136,8 @@ export default function AsramaDialog({
                     >
                         <div className="flex flex-col gap-4">
                             <div className="flex flex-col gap-1 ">
-                                <label htmlFor="nama">
-                                    Nama Asrama
+                                <label className="capitalize " htmlFor="nama">
+                                    Nama {namaKelompok}
                                     <RequiredSign />
                                 </label>
                                 <input
@@ -165,7 +167,10 @@ export default function AsramaDialog({
                                     }}
                                     render={({ field }) => (
                                         <Select
-                                            {...field}
+                                            value={selectValue.find(
+                                                (option: any) =>
+                                                    option.value === field.value
+                                            )}
                                             options={selectValue}
                                             onChange={(option) => {
                                                 field.onChange(option);

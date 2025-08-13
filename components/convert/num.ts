@@ -7,7 +7,7 @@ export const formatToThreeDigit = (
     return `${isRupiah ? "Rp " : ""}${formatted}`;
 };
 
-export const dateFormatTable = (input: string): string => {
+export const dateee = (input: string): string => {
     const date = new Date(input);
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0"); // Months start at 0

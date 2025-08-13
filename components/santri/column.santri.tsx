@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { capitalizeFirstWord } from "../convert/typing";
-import { dateFormatTable, formatToThreeDigit } from "../convert/num";
+import { formatToThreeDigit } from "../convert/num";
 import { DataSantriProps } from "@/types/santri";
 import {
     DropdownMenu,
@@ -15,6 +15,8 @@ import { DialogConfirmation } from "../ui/dialog-confirmation";
 import { processJatah } from "@/controller/jatah.service";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { dateFormatTable } from "../convert/date";
+import TambahSaldoDialog from "./form.dialog.saldo";
 
 export const columnSantri: ColumnDef<DataSantriProps>[] = [
     {
@@ -43,7 +45,9 @@ export const columnSantri: ColumnDef<DataSantriProps>[] = [
             const res = row.original.saldo >= row.original.jatah;
             return (
                 <div className="text-center">
-                    {res ? row.original.tanggal_jatah_habis : "-"}{" "}
+                    {res
+                        ? dateFormatTable(row.original.tanggal_jatah_habis)
+                        : "-"}{" "}
                 </div>
             );
         },
@@ -55,7 +59,7 @@ export const columnSantri: ColumnDef<DataSantriProps>[] = [
             return (
                 <div className="text-center">
                     {row.original.tanggal_menabung
-                        ? row.original.tanggal_menabung
+                        ? dateFormatTable(row.original.tanggal_menabung)
                         : "-"}{" "}
                 </div>
             );
@@ -97,10 +101,14 @@ export const columnSantri: ColumnDef<DataSantriProps>[] = [
                             />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-[167px] flex flex-col gap-1 *:cursor-pointer *:h-[25px] *:text-[12px] *:font-normal *:rounded *:w-full *:justify-center">
-                            <DropdownMenuItem className="focus:bg-palette-100">
-                                Tambah Tabungan
-                            </DropdownMenuItem>
-                            {/* <DropdownMenuItem className="focus:bg-palette-100"> */}
+                            <TambahSaldoDialog
+                                buttonTrigger={
+                                    <div className="text-center cursor-pointer h-[25px] text-[12px] font-normal flex justify-center items-center w-full  rounded hover:bg-palette-100 focus:bg-palette-100">
+                                        Tambah Tabungan
+                                    </div>
+                                }
+                                oldData={row.original}
+                            />
                             <DialogConfirmation
                                 open={openConfirmation}
                                 openChange={setOpenConfirmation}
@@ -122,7 +130,6 @@ export const columnSantri: ColumnDef<DataSantriProps>[] = [
                                 }
                                 handleAction={handleAction}
                             />
-                            {/* </DropdownMenuItem> */}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

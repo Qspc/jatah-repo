@@ -83,16 +83,18 @@ export default function LandingDialog({
                     >
                         <div className="flex flex-col gap-4">
                             <div className="flex flex-col gap-1 ">
-                                <label htmlFor="nama">
-                                    Nama Kelompok
-                                    <RequiredSign />
-                                </label>
+                                <div className="flex flex-col">
+                                    <label htmlFor="nama">
+                                        Nama Kelompok atau Lembaga
+                                        <RequiredSign />
+                                    </label>
+                                </div>
                                 <input
                                     {...register("nama", {
                                         required: "Nama Kelompok belum diisi",
                                     })}
                                     type="text"
-                                    placeholder="nama kelompok"
+                                    placeholder="Pesantren, Asrama, Yayasan, dll"
                                     className="w-full px-1 py-2 pl-2 text-black bg-transparent border rounded border-palette"
                                 />
                                 {errors.nama && (
@@ -102,9 +104,16 @@ export default function LandingDialog({
                                 )}
                             </div>
                             <div className="flex flex-col gap-1 ">
-                                <label htmlFor="nama_kategori">
-                                    Nama Kategori
-                                </label>
+                                <div className="flex flex-col">
+                                    <label htmlFor="nama_kategori">
+                                        Nama Kategori
+                                    </label>
+                                    <span className="text-xs font-light">
+                                        Kelompok tempat pembagian jatah yang
+                                        akan diberi, contoh: Asrama, Kamar,
+                                        Kelas, Angkatan, dll
+                                    </span>
+                                </div>
                                 <input
                                     {...register("nama_kategori")}
                                     type="text"

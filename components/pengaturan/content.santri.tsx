@@ -77,52 +77,54 @@ export default function PengaturanSantri({ id = "1" }: props) {
                         onChange={(option) => setValue(option)}
                     />
                 )}
-                <div className="flex items-center gap-2">
-                    <SantriDialog
-                        req="edit"
-                        id={id}
-                        buttonTrigger={
-                            <div
-                                className={`flex items-center ${
-                                    !value && "cursor-not-allowed"
-                                } gap-2 button-primary `}
-                            >
-                                {isLoading && <LoadingButton />} edit
-                            </div>
-                        }
-                        data={
-                            allSantri?.find(
-                                (item: any) => item.id === value?.value
-                            ) ?? null
-                        }
-                    />
-                    <DialogConfirmation
-                        buttonTrigger={
-                            <div
-                                className={`flex items-center ${
-                                    !value && "cursor-not-allowed"
-                                } gap-2 button-delete `}
-                            >
-                                {isLoading && <LoadingButton />} hapus
-                            </div>
-                        }
-                        open={open}
-                        openChange={setOpen}
-                        handleAction={handleDelete}
-                        title={`Anda yakin ingin menghapus ${value?.label}?`}
-                        cancelTitle="Periksa lagi"
-                        description={
-                            <>
-                                Dengan menghapus ini, semua data yang berkaitan
-                                dengan{" "}
-                                <span className="font-bold">
-                                    {value?.label}
-                                </span>{" "}
-                                akan menghilang.
-                            </>
-                        }
-                    />
-                </div>
+                {selectValue?.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <SantriDialog
+                            req="edit"
+                            id={id}
+                            buttonTrigger={
+                                <div
+                                    className={`flex items-center ${
+                                        !value && "cursor-not-allowed"
+                                    } gap-2 button-primary `}
+                                >
+                                    {isLoading && <LoadingButton />} edit
+                                </div>
+                            }
+                            data={
+                                allSantri?.find(
+                                    (item: any) => item.id === value?.value
+                                ) ?? null
+                            }
+                        />
+                        <DialogConfirmation
+                            buttonTrigger={
+                                <div
+                                    className={`flex items-center ${
+                                        !value && "cursor-not-allowed"
+                                    } gap-2 button-delete `}
+                                >
+                                    {isLoading && <LoadingButton />} hapus
+                                </div>
+                            }
+                            open={open}
+                            openChange={setOpen}
+                            handleAction={handleDelete}
+                            title={`Anda yakin ingin menghapus ${value?.label}?`}
+                            cancelTitle="Periksa lagi"
+                            description={
+                                <>
+                                    Dengan menghapus ini, semua data yang
+                                    berkaitan dengan{" "}
+                                    <span className="font-bold">
+                                        {value?.label}
+                                    </span>{" "}
+                                    akan menghilang.
+                                </>
+                            }
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

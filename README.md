@@ -4,7 +4,9 @@
 
 -   catch error every API
 -   pagination
--   update table
--   update jatah supaya gak dijatah dua kali
--   validation for button edit & delete when not have data, issue in onChange asrama
--   responsive design
+
+# new feature
+
+-   ambil semua jatah
+-   setting agar jatah hanya bisa diambil sehari sekali (optional or fixed)
+-   setting agar saat ambil jatah per individu lalu per asrama, si individu gak keambil dua kali
