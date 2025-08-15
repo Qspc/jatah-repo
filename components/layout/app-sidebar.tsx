@@ -77,8 +77,9 @@ export function AppSidebar() {
                         variant="outline"
                         className="justify-between w-full border-red-600"
                         onClick={() => {
-                            signOut();
-                            router.push("/");
+                            signOut({ redirect: false }).then(() => {
+                                router.push("/");
+                            });
                         }}
                     >
                         <p>Logout</p>

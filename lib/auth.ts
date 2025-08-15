@@ -42,30 +42,6 @@ export const authOptions: NextAuthOptions = {
                         .eq("password", credentials?.password)
                         .single();
 
-                    //                         {
-                    //   code: 'PGRST116',
-                    //   details: 'The result contains 0 rows',
-                    //   hint: null,
-                    //   message: 'JSON object requested, multiple (or no) rows returned'
-                    // }
-                    // if (error || !user)
-                    //     return res
-                    //         .status(401)
-                    //         .json({ message: "Invalid credentials" });
-
-                    // const isValid = await bcrypt.compare(
-                    //     password,
-                    //     user.password
-                    // );
-                    // if (!isValid)
-                    //     return res
-                    //         .status(401)
-                    //         .json({ message: "Invalid credentials" });
-
-                    // console.log(user);
-                    // console.log(error);
-                    console.log(user, error);
-
                     if (error) return null;
 
                     if (user) {

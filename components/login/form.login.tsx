@@ -25,13 +25,15 @@ export default function LoginPage() {
         try {
             setLoading(true);
             // alert(JSON.stringify(data));
-            signIn("credentials", { ...data }).then(async (res) => {
-                console.log({ res });
-                if (res?.ok) {
-                    const session = await getSession();
-                    route.push("/landing");
+            signIn("credentials", { ...data, redirect: false }).then(
+                async (res) => {
+                    console.log({ res });
+                    if (res?.ok) {
+                        const session = await getSession();
+                        route.push("/landing");
+                    }
                 }
-            });
+            );
             // toast.success("Selamat datang");
         } catch (error) {
             toast.error("Proses gagal");
