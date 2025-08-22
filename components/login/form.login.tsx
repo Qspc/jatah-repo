@@ -25,15 +25,19 @@ export default function LoginPage() {
         try {
             setLoading(true);
             // alert(JSON.stringify(data));
-            signIn("credentials", { ...data, redirect: false }).then(
-                async (res) => {
-                    console.log({ res });
-                    if (res?.ok) {
-                        const session = await getSession();
-                        route.push("/landing");
-                    }
+            signIn("credentials", {
+                ...data,
+                mode: "signin",
+                redirect: false,
+            }).then(async (res) => {
+                // console.log({ res });
+                if (res?.error) {
+                    toast.error("Email atau password anda salah");
                 }
-            );
+                if (res?.ok) {
+                    route.push("/landing");
+                }
+            });
             // toast.success("Selamat datang");
         } catch (error) {
             toast.error("Proses gagal");
@@ -55,18 +59,18 @@ export default function LoginPage() {
                             className="absolute w-4 h-4 text-white -translate-y-1/2 left-3 top-1/2"
                         />
                         <input
-                            {...register("username", {
-                                required: "Username belum diisi.",
+                            {...register("email", {
+                                required: "email belum diisi.",
                             })}
-                            type="text"
-                            placeholder="USERNAME"
+                            type="email"
+                            placeholder="contoh@gmail.com"
                             className="w-full px-2 py-3 pl-10 text-white border border-white rounded bg-palette"
                         />
                     </div>
-                    {errors.username && (
+                    {errors.email && (
                         <ErrorMessage
                             className="text-white"
-                            error={errors.username.message}
+                            error={errors.email.message}
                         />
                     )}
                 </div>

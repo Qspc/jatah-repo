@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "../ui/skeleton";
 
 export default function CardLandingPage() {
-    const { data, isSuccess, isLoading } = useQuery({
+    const { data, isSuccess, isLoading, isError } = useQuery({
         queryKey: ["kelompok"],
         queryFn: async () => {
             const data = getAllKelompok();
@@ -24,6 +24,8 @@ export default function CardLandingPage() {
         },
     });
     const router = useRouter();
+
+    if (isError) return <>error</>;
 
     return (
         <div className="flex flex-wrap items-center justify-center gap-8">
@@ -39,7 +41,7 @@ export default function CardLandingPage() {
                 </Card>
             ) : (
                 <>
-                    {data.map((res: any, index: any) => (
+                    {data?.map((res: any, index: any) => (
                         <Card
                             key={index}
                             className="flex flex-row items-center justify-between bg-white max-h-28 min-w-96"

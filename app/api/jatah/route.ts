@@ -1,9 +1,11 @@
-import supabase from "@/lib/db";
+import { createServerSupabase } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
+        const supabase = await createServerSupabase();
+
         const { error } = await supabase.rpc("bagi_jatah", body);
 
         if (error) {

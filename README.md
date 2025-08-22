@@ -2,7 +2,7 @@
 
 ## Do
 
--   catch error every API
+-   throw error every API
 -   pagination
 
 # new feature

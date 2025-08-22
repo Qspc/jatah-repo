@@ -1,7 +1,17 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import https from "https";
-import supabase from "./db";
+import supabaseAuth from "./db-auth";
+import { createClient } from "@supabase/supabase-js";
+import { LoginFormProps } from "@/types/login";
+
+interface CustomSession {
+    user: {
+        id: string;
+        email: string;
+    };
+    expires: string;
+}
 
 export const authOptions: NextAuthOptions = {
     pages: {
@@ -16,45 +26,60 @@ export const authOptions: NextAuthOptions = {
     jwt: {
         maxAge: 300 * 60,
     },
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         CredentialsProvider({
             name: "Sign In",
             credentials: {
-                username: {
-                    label: "username",
+                email: {
+                    label: "email",
                     type: "email",
-                    placeholder: "username",
+                    placeholder: "email",
                 },
                 password: { label: "Password", type: "password" },
-                token: { label: "Captcha", type: "text" },
+                mode: {
+                    label: "Mode",
+                    type: "text",
+                    placeholder: "signin, signup, or resetpassword",
+                },
             },
-            async authorize(credentials) {
+            async authorize(credentials: any) {
                 try {
                     console.log(
                         "LOGIN HIT URL",
                         `${process.env.API_URL}/auth/login`
                     );
+                    const { email, password, mode } = credentials;
+                    const lowerMode = mode?.toLowerCase();
+                    if (!email && !password) {
+                        throw new Error(
+                            "Password is required for signin or signup"
+                        );
+                    }
+                    const { data, error } =
+                        await supabaseAuth?.auth?.signInWithPassword({
+                            email,
+                            password,
+                        });
 
-                    const { data: user, error } = await supabase
-                        .from("user")
-                        .select("*")
-                        .eq("username", credentials?.username)
-                        .eq("password", credentials?.password)
-                        .single();
+                    // const user =
+                    //     lowerMode === "signup"
+                    //         ? await authHandlers.handleSignup(email, password)
+                    //         : await authHandlers.handleSignIn(email, password);
 
-                    if (error) return null;
-
-                    if (user) {
-                        return {
-                            id: user.id,
-                            name: user.nama,
-                            username: user.username,
-                            // access_token: user.token.access_token,
-                            // refresh_token: user.token.refresh_token,
-                        };
+                    // console.log(data);
+                    if (error) {
+                        throw new Error(
+                            "Password is required for signin or signup"
+                        );
                     }
 
-                    return null;
+                    return {
+                        id: data.user.id,
+                        email: data.user.email ?? email,
+                        name: data.user.email ?? email,
+                        supabaseAccessToken: data.session.access_token,
+                    };
                 } catch (error: any) {
                     throw new Error(
                         error.response?.data?.error?.messages[0] ||
@@ -65,57 +90,71 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async session({ session, token }) {
-            const extendedToken = token as {
-                access_token?: string;
-                refresh_token?: string;
-                id: string;
-            };
-            // if (extendedToken) {
-            //     session.isClient = extendedToken.isClient;
-            //     session.user.id = extendedToken.id;
-            //     session.otpVerified = extendedToken.otpVerified;
-            //     session.access_token = extendedToken.access_token;
-            //     session.refresh_token = extendedToken.refresh_token;
-            // }
-            return session;
+        async jwt({ token, user }) {
+            if (user) {
+                token.userId = user.id;
+                token.email = user.email;
+                token.lastUpdated = new Date().toISOString();
+                token.supabaseAccessToken = user.supabaseAccessToken;
+            }
+            return token;
         },
-        async jwt({ token, trigger, user, session }) {
-            const extendedToken = token as {
-                otpVerified?: boolean;
-                name: string;
-                id: string;
-                access_token?: string;
-                refresh_token?: string;
-                isClient?: boolean;
+        async session({ session, token }): Promise<CustomSession> {
+            session.supabaseAccessToken = token.supabaseAccessToken as string;
+            return {
+                ...session,
+                user: {
+                    id: token.userId as string,
+                    email: token.email as string,
+                },
             };
-
-            // if (user) {
-            //     extendedToken.isClient = user.isClient;
-            //     extendedToken.otpVerified = user.otpVerified;
-            //     extendedToken.id = user.id;
-            //     extendedToken.access_token = user.access_token;
-            //     extendedToken.refresh_token = user.refresh_token;
-            // }
-
-            // if (trigger === "update" && session?.id) {
-            //     extendedToken.id = session.id;
-            // }
-
-            // if (trigger === "update" && session?.name) {
-            //     extendedToken.name = session.name;
-            // }
-            // if (trigger === "update" && session?.otpVerified) {
-            //     extendedToken.otpVerified = session.otpVerified;
-            // }
-            // if (trigger === "update" && session?.access_token) {
-            //     extendedToken.access_token = session.access_token; // Update access_token
-            // }
-            // if (trigger === "update" && session?.refresh_token) {
-            //     extendedToken.refresh_token = session.refresh_token; // Update access_token
-            // }
-
-            return extendedToken;
         },
+    },
+};
+
+const authHandlers = {
+    async handleSignup(email: string, password: string) {
+        const { data, error } = await supabaseAuth.auth.signUp({
+            email,
+            password,
+            options: {
+                emailRedirectTo: `${process.env.API_URL}`,
+            },
+        });
+
+        if (error) {
+            console.error("[AUTH] Signup error:", error);
+            throw new Error(error.message);
+        }
+
+        if (!data.user?.id) {
+            throw new Error(
+                "Signup successful. Please check your email for confirmation."
+            );
+        }
+
+        return data.user;
+    },
+
+    async handleSignIn(email: string, password: string) {
+        const { data, error } = await supabaseAuth.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (error) {
+            console.error("[AUTH] Signin error:", error);
+            throw new Error(error.message);
+        }
+
+        if (!data.user?.id) {
+            throw new Error("Invalid credentials");
+        }
+
+        return data.user;
+    },
+
+    async handleResetPassword(email: string) {
+        // We'll implement this in Part 3
     },
 };

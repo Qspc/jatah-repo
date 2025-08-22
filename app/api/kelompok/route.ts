@@ -1,16 +1,21 @@
-import supabase from "@/lib/db";
+import { authOptions } from "@/lib/auth";
+import { createServerSupabase } from "@/lib/db";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const id = searchParams.get("id");
+        const supabase = await createServerSupabase();
+
         if (id) {
             const { data, error } = await supabase
                 .from("kelompok")
                 .select("*")
                 .eq("id", id)
                 .single();
+
             if (error) {
                 return new NextResponse(
                     JSON.stringify({
@@ -40,6 +45,8 @@ export async function GET(req: Request) {
 
         return NextResponse.json(data);
     } catch (error: any) {
+        // console.log({ error });
+
         return new NextResponse(
             JSON.stringify({
                 message:
@@ -60,6 +67,8 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
+        const supabase = await createServerSupabase();
+
         const { error } = await supabase
             .from("kelompok")
             .insert([body])
@@ -102,6 +111,8 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
     try {
         const body = await req.json();
+        const supabase = await createServerSupabase();
+
         const { error } = await supabase
             .from("kelompok")
             .update(body)
@@ -144,6 +155,7 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
     try {
         const body = await req.json();
+        const supabase = await createServerSupabase();
 
         const response = await supabase
             .from("kelompok")

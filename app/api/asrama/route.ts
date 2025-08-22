@@ -1,10 +1,12 @@
-import supabase from "@/lib/db";
+import { createServerSupabase } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const id = searchParams.get("id");
+        const supabase = await createServerSupabase();
+
         const { data, error } = await supabase
             .from("asrama")
             .select("*")
@@ -41,6 +43,8 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
+        const supabase = await createServerSupabase();
+
         const { data, error } = await supabase
             .from("asrama")
             .insert([body])
@@ -83,6 +87,8 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
     try {
         const body = await req.json();
+        const supabase = await createServerSupabase();
+
         const { error } = await supabase
             .from("asrama")
             .update(body)
@@ -125,6 +131,7 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
     try {
         const body = await req.json();
+        const supabase = await createServerSupabase();
 
         const response = await supabase
             .from("asrama")

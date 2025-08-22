@@ -1,10 +1,12 @@
-import supabase from "@/lib/db";
+import { createServerSupabase } from "@/lib/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
+        const supabase = await createServerSupabase();
+
         const hashedPassword = await bcrypt.hash(body.password, 10);
 
         const result = await supabase
